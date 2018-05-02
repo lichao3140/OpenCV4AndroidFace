@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OpenCV4AndroidFace</string>
+
+    <string name="title_activity_hello_open_cv">HelloOpenCVActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>
