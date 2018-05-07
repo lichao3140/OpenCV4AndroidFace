@@ -3,15 +3,12 @@ package com.lichao.opencv4androidface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.TextView;
+import com.lichao.opencv4androidface.natives.DetectionBasedTracker;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.InstallCallbackInterface;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
@@ -21,7 +18,6 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
-import org.opencv.samples.facedetect.DetectionBasedTracker;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -53,7 +49,7 @@ public class FaceDetectActivity extends AppCompatActivity implements CameraBridg
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                     // OpenCV初始化加载成功，再加载本地so库
-                    System.loadLibrary("detection_based_tracker");
+                    System.loadLibrary("opencv341");
 
                     try {
                         // 加载人脸检测模式文件
