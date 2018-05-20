@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/opencv_hello"
+        android:title="Hello OpenCV" />
+
+    <item android:id="@+id/opencv_face"
+        android:title="人脸检测" />
+
+</menu>
