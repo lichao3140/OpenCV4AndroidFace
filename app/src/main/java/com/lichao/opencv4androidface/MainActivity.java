@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 startFileManager();
                 break;
             case R.id.btn_reset: // 显示原图
-
+                showOriginalImage();
                 break;
         }
     }
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_FOR_IMAGE) {
                 Uri uri = data.getData();
                 mImgPath = FileUtils.getFileAbsolutePath(this, uri);

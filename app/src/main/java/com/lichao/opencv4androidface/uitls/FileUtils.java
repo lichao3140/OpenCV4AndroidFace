@@ -66,15 +66,11 @@ public class FileUtils {
                 String[] selectionArgs = new String[] { split[1] };
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
-        } // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(fileUri.getScheme())) {
-            // Return the remote address
+        } else if ("content".equalsIgnoreCase(fileUri.getScheme())) {
             if (isGooglePhotosUri(fileUri))
                 return fileUri.getLastPathSegment();
             return getDataColumn(context, fileUri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(fileUri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(fileUri.getScheme())) {
             return fileUri.getPath();
         }
         return null;
