@@ -7,4 +7,6 @@ package com.lichao.opencv4androidface.uitls;
  */
 public class JNIUtils {
 
+    public static native String doAverageFace(String[] paths);
+
 }

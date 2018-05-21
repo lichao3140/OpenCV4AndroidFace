@@ -16,6 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -23,13 +24,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.lichao.opencv4androidface.bean.Landmark;
+import com.lichao.opencv4androidface.uitls.BitmapUtils;
 import com.lichao.opencv4androidface.uitls.FileUtils;
+import com.lichao.opencv4androidface.uitls.JNIUtils;
+import com.lichao.opencv4androidface.uitls.MediaScanner;
 import com.orhanobut.logger.Logger;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -113,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn_detect: // 关键点
                 detectFace();
                 break;
+            case R.id.btn_save:
+                saveBitmapToFile();
+                break;
         }
     }
 
@@ -188,13 +196,40 @@ public class MainActivity extends AppCompatActivity {
 
         if (processList.size() == 0) {
             if (requestCode == REQUEST_FOR_AVERAGE) {
-                //doAverageFace(pathArray);
+                doAverageFace(pathArray);
             } else if (requestCode == REQUEST_FOR_SWAP) {
                 //doFaceSwap(pathArray);
             }
         } else {
             //createLandMarkTxt(processList, pathArray, requestCode);
         }
+    }
+
+    protected void doAverageFace(String[] pathArray) {
+        showDialog();
+        String result = JNIUtils.doAverageFace(pathArray);
+
+        if (result != null) {
+            final File file = new File(result);
+            if (file.exists()) {
+                mImgPath = result;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Picasso.with(mContext).load(file)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                .into(ivImg);
+                    }
+                });
+
+            } else {
+                Toast.makeText(mContext, "cannot create average face", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(mContext, "cannot create average face", Toast.LENGTH_SHORT).show();
+        }
+
+        dismissDialog();
     }
 
     private boolean isLandmarkTxtExist(String imgPath) {
@@ -219,6 +254,35 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    /**
+     * 保存图片
+     */
+    private void saveBitmapToFile() {
+        Bitmap bitmap = BitmapUtils.getViewBitmap(ivImg);
+
+        final String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()
+                + File.separator + "AverageFaceDemo";
+
+        long timestamp = System.currentTimeMillis();
+        String fileName = "averageFace" + timestamp + ".png";
+
+        FileUtils.saveBitmapToFile(getApplicationContext(), bitmap, filePath, fileName);
+        callMediaScanner(filePath, fileName);
+    }
+
+    /**
+     * 扫描文件
+     * @param filePath
+     * @param fileName
+     */
+    private void callMediaScanner(String filePath, String fileName) {
+        String path = filePath + "/" + fileName;
+        MediaScanner mediaScanner = new MediaScanner(getApplicationContext());
+        String[] filePaths = new String[]{path};
+        String[] mimeTypes = new String[]{MimeTypeMap.getSingleton().getMimeTypeFromExtension("png")};
+        mediaScanner.scanFiles(filePaths, mimeTypes);
     }
 
     /**
